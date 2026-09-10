@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "project": "SOD 酵素 DApp",
+  "snapshotDate": "2026-09-11",
+  "chainId": 56,
+  "network": "BNB Smart Chain",
+  "frontendUrl": "https://sodgpc.github.io/",
+  "blockExplorerUrl": "https://bscscan.com",
+  "contracts": {
+    "SodMining": {
+      "proxyKind": "transparent",
+      "proxy": "0x2cC3d50ff78c0b4857D2c097b82d7682fd1907B5",
+      "implementation": "0x3b7FfBDE40a975D3327939408C97a53BFa4fC901",
+      "proxyAdmin": "0x803977EaF94063D13fc995e0d753F1A08662Bdc3",
+      "businessOwner": "0xB7924467cEce8FD55dA013d8cFe2333173c9C236",
+      "adminOwner": "0xA5026571A9BCfE4B2839fe274EcAbA7f0fc3e684",
+      "deploymentTransaction": "0xf656af5854ced2bc42dc59d670040d2c2b7fa4c2c54b3aa17f9cc70c6ce883c9",
+      "deploymentBlock": 121097006,
+      "proxyExplorer": "https://bscscan.com/address/0x2cC3d50ff78c0b4857D2c097b82d7682fd1907B5",
+      "implementationExplorer": "https://bscscan.com/address/0x3b7FfBDE40a975D3327939408C97a53BFa4fC901#code"
+    },
+    "SodHistoryRegistry": {
+      "proxyKind": "transparent",
+      "proxy": "0x58c134601e475Fcc865160bCAcF83bDA54e8929b",
+      "implementation": "0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639",
+      "proxyAdmin": "0xfBd3C4095bC52f465F5F7d17c68Ea35F823B4bdB",
+      "businessOwner": "0xB7924467cEce8FD55dA013d8cFe2333173c9C236",
+      "adminOwner": "0xA5026571A9BCfE4B2839fe274EcAbA7f0fc3e684",
+      "deploymentTransaction": "0x60773da1e0ce8be24b951b79a631c5b062f203c981d46fae232a5cd6b89c0c0a",
+      "deploymentBlock": 121097085,
+      "proxyExplorer": "https://bscscan.com/address/0x58c134601e475Fcc865160bCAcF83bDA54e8929b",
+      "implementationExplorer": "https://bscscan.com/address/0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639#code"
+    },
+    "SodAutoWithdraw": {
+      "proxyKind": "transparent",
+      "proxy": "0x30e7C7083C93D08a3f3A4112Eeb375006299437B",
+      "implementation": "0xaC938A6B177E4843BaDCaB8abE5131821BFF7629",
+      "proxyAdmin": "0x3E0C3f7e141575a5Aa1336e2c053CcA13f68ab70",
+      "businessOwner": "0xB7924467cEce8FD55dA013d8cFe2333173c9C236",
+      "adminOwner": "0xB7924467cEce8FD55dA013d8cFe2333173c9C236",
+      "deploymentTransaction": "0xd1127c38a53ad28df5e244fe302d8d02fbf457e20637fe256aeb9b2e4aa746fc",
+      "deploymentBlock": 121098759,
+      "proxyExplorer": "https://bscscan.com/address/0x30e7C7083C93D08a3f3A4112Eeb375006299437B",
+      "implementationExplorer": "https://bscscan.com/address/0xaC938A6B177E4843BaDCaB8abE5131821BFF7629#code"
+    }
+  },
+  "executor": "0xb7941CA8DB894178d415A48F76085822dC489F16",
+  "oracle": {
+    "address": "0x7c7CdA7C435776815606879390523c6486C0b0fB",
+    "managedExternally": true
+  },
+  "assets": {
+    "usdt": "0x55d398326f99059fF775485246999027B3197955",
+    "gpc": "0xD3c304697f63B279cd314F92c19cDBE5E5b1631A",
+    "wbnb": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+  },
+  "router": "0x10ED43C718714eb63d5aA57B78B54704E256024E",
+  "pairs": {
+    "gpcWbnb": "0x12dAbFCe08eF59c24cdee6c488E05179Fb8D64D9",
+    "wbnbUsdt": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE"
+  },
+  "wallets": {
+    "operationWallet": "0x7e38D6B55B8C39e24710535a9Be64c81529DAFF9",
+    "technicalWallet": "0x11774526E98245D0AFf2bEA8c7D762a00bD29CC1",
+    "referralRoot": "0x7e38D6B55B8C39e24710535a9Be64c81529DAFF9"
+  },
+  "sourceVerification": {
+    "SodMining": "https://bscscan.com/address/0x3b7FfBDE40a975D3327939408C97a53BFa4fC901#code",
+    "SodAutoWithdraw": "https://bscscan.com/address/0xaC938A6B177E4843BaDCaB8abE5131821BFF7629#code"
+  }
+}
