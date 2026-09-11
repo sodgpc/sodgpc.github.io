@@ -18,7 +18,7 @@ H5入口：**[https://sodgpc.github.io/](https://sodgpc.github.io/)**
 
 价格读取继续复用由原系统维护的Oracle [`0x7c7CdA7C435776815606879390523c6486C0b0fB`](https://bscscan.com/address/0x7c7CdA7C435776815606879390523c6486C0b0fB)。本次没有部署或接管Oracle，其价格观测和治理仍由外部系统负责。
 
-此前空业务套件（Mining `0x2cC3…07B5`、History `0x58c1…29b`、AutoWithdraw `0x30e7…437B`）已弃用，仅作为历史链上记录保留，不再作为前端、执行器或后续业务入口。History实现代码未改变，因此新History代理复用已部署实现 `0xf51A…E639`；Mining与AutoWithdraw运行V2实现。
+此前空业务套件（Mining `0x2cC3…07B5`、History `0x58c1…29b`、AutoWithdraw `0x30e7…437B`）已弃用，仅作为历史链上记录保留，不再作为前端、执行器或后续业务入口；旧Mining经完整空业务检查后已暂停。History实现代码未改变，因此新History代理复用已部署实现 `0xf51A…E639`；Mining与AutoWithdraw运行V2实现。
 
 ## 治理与执行权限
 
@@ -77,4 +77,4 @@ npm run compile
 - [AutoWithdraw V2实现：0xdF074657E4f479d53a7A099e9b4461f31658269C](https://bscscan.com/address/0xdF074657E4f479d53a7A099e9b4461f31658269C#code)
 - [History实现：0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639](https://bscscan.com/address/0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639#code)
 
-地址快照日期：2026-09-11。代理可由各自ProxyAdmin治理方升级，当前实现、绑定及权限最终以BSC链上状态为准。生产页面切换前还应完成部署记录合并、链上验证、前端地址更新和发布产物哈希核验。
+地址快照日期：2026-09-11。代理可由各自ProxyAdmin治理方升级，当前实现、绑定及权限最终以BSC链上状态为准。部署记录合并、链上验证、前端与执行器地址切换及线上发布产物哈希核验均已完成。

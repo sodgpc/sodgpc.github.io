@@ -77,7 +77,10 @@
       "SodMining": {
         "proxy": "0x2cC3d50ff78c0b4857D2c097b82d7682fd1907B5",
         "implementation": "0x3b7FfBDE40a975D3327939408C97a53BFa4fC901",
-        "proxyAdmin": "0x803977EaF94063D13fc995e0d753F1A08662Bdc3"
+        "proxyAdmin": "0x803977EaF94063D13fc995e0d753F1A08662Bdc3",
+        "paused": true,
+        "pauseTransaction": "0x69f0577e11d09e1f1693d0b2b9699e1041e1ab2e816aea91a87e121d75f31e8f",
+        "pauseBlock": 121217906
       },
       "SodHistoryRegistry": {
         "proxy": "0x58c134601e475Fcc865160bCAcF83bDA54e8929b",
