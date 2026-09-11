@@ -9,12 +9,12 @@ import {Ownable2StepUpgradeable} from '@openzeppelin/contracts-upgradeable/acces
 import {ReentrancyGuardUpgradeable} from '@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol';
 import {ISodMiningAutoWithdraw} from './interfaces/ISodMiningAutoWithdraw.sol';
 
-/// @notice Prepaid, non-transferable credits for explicitly authorized SOD withdrawals.
+/// @notice Prepaid, non-transferable credits that automatically schedule SOD withdrawals.
 /// @dev Mining is fixed at initialization. Only a positive successful settlement consumes a credit.
 contract SodAutoWithdraw is Initializable, Ownable2StepUpgradeable, ReentrancyGuardUpgradeable, ERC20Upgradeable {
     using Address for address payable;
 
-    uint256 public constant VERSION = 1;
+    uint256 public constant VERSION = 2;
     uint256 public constant CREDIT_PRICE = 0.0005 ether;
     uint256 public constant EXECUTION_DELAY = 10 minutes;
     uint256 public constant WITHDRAW_COOLDOWN = 24 hours;
@@ -44,6 +44,7 @@ contract SodAutoWithdraw is Initializable, Ownable2StepUpgradeable, ReentrancyGu
     error AutoWithdrawalNotReady();
     error NoNetReward();
     error PageTooLarge();
+    error ThirdPartyCreditPurchaseDisabled();
 
     modifier onlyExecutor() {
         if (msg.sender != executor) revert OnlyExecutor();
@@ -74,13 +75,14 @@ contract SodAutoWithdraw is Initializable, Ownable2StepUpgradeable, ReentrancyGu
     fallback() external payable { revert DirectPaymentDisabled(); }
     function decimals() public pure override returns (uint8) { return 0; }
 
-    /// @notice An existing credit balance does not authorize withdrawals.
+    /// @notice Purchased credits enter the automatic execution queue immediately.
     function buyCredits(uint256 credits) external payable nonReentrant returns (uint256) {
         return _purchase(msg.sender, msg.sender, credits);
     }
 
-    function buyFor(address beneficiary, uint256 credits) external payable nonReentrant returns (uint256) {
-        return _purchase(msg.sender, beneficiary, credits);
+    /// @notice Retained for selector compatibility; third parties cannot force credits on a user.
+    function buyFor(address, uint256) external payable returns (uint256) {
+        revert ThirdPartyCreditPurchaseDisabled();
     }
 
     function grantCredits(address beneficiary, uint256 credits) external onlyOwner {
@@ -91,9 +93,11 @@ contract SodAutoWithdraw is Initializable, Ownable2StepUpgradeable, ReentrancyGu
         emit CreditsGranted(beneficiary, credits);
     }
 
-    /// @notice Prevent paid purchases until Mining supports delegation and can operate.
+    /// @notice Prevent paid purchases until Mining authorizes this service and can operate.
     function isMiningReady() public view returns (bool) {
-        try mining.autoWithdrawDelegate(address(this)) returns (address) {} catch { return false; }
+        try mining.autoWithdrawService() returns (address service) {
+            if (service != address(this)) return false;
+        } catch { return false; }
         try mining.paused() returns (bool isPaused) { if (isPaused) return false; } catch { return false; }
         try mining.historyRegistry() returns (address registry) { return registry != address(0); } catch { return false; }
     }
@@ -101,9 +105,6 @@ contract SodAutoWithdraw is Initializable, Ownable2StepUpgradeable, ReentrancyGu
     /// @notice Advisory eligibility. Execution still validates prices and all Mining guards atomically.
     function checkAuto(address beneficiary) public view returns (bool) {
         if (balanceOf(beneficiary) == 0 || !isMiningReady()) return false;
-        try mining.autoWithdrawDelegate(beneficiary) returns (address delegate) {
-            if (delegate != address(this)) return false;
-        } catch { return false; }
 
         try mining.users(beneficiary) returns (uint256 power, uint256, uint256, uint64, uint64 nextWithdrawAt, uint64 inactivityStartedAt) {
             if (power == 0 || nextWithdrawAt == 0 || inactivityStartedAt == 0 ||

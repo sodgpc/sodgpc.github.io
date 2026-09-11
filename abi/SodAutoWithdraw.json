@@ -56,6 +56,11 @@
   },
   {
     "inputs": [],
+    "name": "ThirdPartyCreditPurchaseDisabled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "TransfersDisabled",
     "type": "error"
   },
@@ -450,12 +455,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "beneficiary",
+        "name": "",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "credits",
+        "name": "",
         "type": "uint256"
       }
     ],

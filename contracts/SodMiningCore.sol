@@ -13,6 +13,7 @@ import {IGpcPriceOracle} from './interfaces/IGpcPriceOracle.sol';
 import {IPancakeFactory} from './interfaces/IPancakeFactory.sol';
 import {IPancakePair} from './interfaces/IPancakePair.sol';
 import {IPancakeRouterV2} from './interfaces/IPancakeRouterV2.sol';
+import {ISodAutoWithdrawService} from './interfaces/ISodAutoWithdrawService.sol';
 import {ISodHistoryRegistry} from './interfaces/ISodHistoryRegistry.sol';
 
 /**
@@ -146,11 +147,16 @@ abstract contract SodMiningCore is
     // reads this state directly instead of scanning RPC event history.
     mapping(address => DailyRewardEarnings) public dailyRewardEarnings;
 
-    // Users opt in explicitly. Delegates can only settle rewards to the user.
+    // Legacy per-user authorization storage is retained for proxy layout and ABI
+    // compatibility. It no longer authorizes withdrawals.
     mapping(address => address) public autoWithdrawDelegate;
 
+    // The single protocol service allowed to settle rewards on behalf of users.
+    // Users cannot replace or revoke this owner-managed authorization.
+    address public autoWithdrawService;
+
     // Reserved storage slots for future implementation upgrades.
-    uint256[39] private __gap;
+    uint256[38] private __gap;
 
     event ReferralBound(address indexed user, address indexed parent, uint256 depth);
     event OrderPlaced(
@@ -176,6 +182,7 @@ abstract contract SodMiningCore is
     event TeamNodeAccounted(address indexed user, address indexed parent);
     event HistoryTrackingInitialized(address indexed registry);
     event AutoWithdrawDelegateSet(address indexed account, address indexed previousDelegate, address indexed newDelegate);
+    event AutoWithdrawServiceInitialized(address indexed service);
 
     error ZeroAddress();
     error AlreadyBound();
@@ -205,6 +212,10 @@ abstract contract SodMiningCore is
     error HistoryNotReady();
     error ExpiryMaintenanceRequired();
     error UnauthorizedAutoWithdrawDelegate();
+    error UnauthorizedAutoWithdrawService();
+    error InvalidAutoWithdrawService();
+    error LegacyAutoWithdrawControlDisabled();
+    error NoAutoWithdrawCredits();
 
     function __SodMiningCore_init(
         address usdt_, address gpc_, address wbnb_, address router_, address oracle_,
@@ -334,18 +345,32 @@ abstract contract SodMiningCore is
         emit OrderPlaced(account, parent, rewardRecipient, gpcBought, gpcBought);
     }
 
+    /// @notice Manual settlement remains available and never consumes an automatic credit.
+    /// @dev A manual settlement only advances the normal reward schedule; queued credits remain active.
     function withdraw() external nonReentrant whenNotPaused { _withdraw(msg.sender); }
 
-    /// @notice Set or revoke automatic settlement; revocation remains available while paused.
-    function setAutoWithdrawDelegate(address delegate) external {
-        address previousDelegate = autoWithdrawDelegate[msg.sender];
-        autoWithdrawDelegate[msg.sender] = delegate;
-        emit AutoWithdrawDelegateSet(msg.sender, previousDelegate, delegate);
+    /// @notice Permanently bind the one protocol service authorized to settle automatic withdrawals.
+    /// @dev Version 2 is already reserved by initializeHistoryTracking.
+    function initializeAutoWithdrawService(address service) external reinitializer(3) onlyOwner {
+        if (service == address(0) || service.code.length == 0) revert InvalidAutoWithdrawService();
+        try ISodAutoWithdrawService(service).mining() returns (address boundMining) {
+            if (boundMining != address(this)) revert InvalidAutoWithdrawService();
+        } catch {
+            revert InvalidAutoWithdrawService();
+        }
+        autoWithdrawService = service;
+        emit AutoWithdrawServiceInitialized(service);
     }
 
-    /// @notice Authorized settlement pays the beneficiary and technical wallet exactly as withdraw().
+    /// @notice Retained only so existing integrations receive an explicit migration error.
+    function setAutoWithdrawDelegate(address) external pure {
+        revert LegacyAutoWithdrawControlDisabled();
+    }
+
+    /// @notice Protocol settlement pays the beneficiary and technical wallet exactly as withdraw().
     function withdrawFor(address beneficiary) external nonReentrant whenNotPaused returns (uint256 netGpc) {
-        if (msg.sender != autoWithdrawDelegate[beneficiary]) revert UnauthorizedAutoWithdrawDelegate();
+        if (msg.sender != autoWithdrawService) revert UnauthorizedAutoWithdrawService();
+        if (ISodAutoWithdrawService(msg.sender).balanceOf(beneficiary) == 0) revert NoAutoWithdrawCredits();
         return _withdraw(beneficiary);
     }
 

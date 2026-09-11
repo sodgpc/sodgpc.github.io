@@ -19,7 +19,7 @@ interface ISodMiningAutoWithdraw {
     function gpc() external view returns (address);
     function ORDER_USDT() external view returns (uint256);
     function POWER_PER_ORDER() external view returns (uint256);
-    function autoWithdrawDelegate(address account) external view returns (address);
+    function autoWithdrawService() external view returns (address);
     function paused() external view returns (bool);
     function historyRegistry() external view returns (address);
     function users(address account) external view returns (

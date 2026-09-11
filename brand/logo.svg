@@ -1,5 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="SOD酵素">
-  <rect width="64" height="64" rx="17" fill="#902e45"/>
-  <path d="M43 18C37 13 24 14 20 22C16 30 24 33 32 35C40 37 46 41 41 48C36 54 24 53 18 48" fill="none" stroke="#fffcf6" stroke-width="6.5" stroke-linecap="round"/>
-  <path d="M44 12C50 11 53 14 51 20C46 20 43 17 44 12Z" fill="#e9d7b6"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 136 136" role="img" aria-label="SOD酵素">
+  <rect width="136" height="136" rx="28" fill="#000200"/>
+  <defs>
+    <linearGradient id="sod-gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fffcdb"/>
+      <stop offset=".2" stop-color="#fff5d1"/>
+      <stop offset=".4" stop-color="#ffdf7c"/>
+      <stop offset=".6" stop-color="#846742"/>
+      <stop offset="1" stop-color="#3e2408"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(-509.7 -83.8)">
+    <path fill="url(#sod-gold)" d="M609.5395 115.4041v63.8955l-31.6683 5.1048 12.4463 3.1327 32.7321-6.032v-68.9961l-13.5101 2.8951Zm-57.8992-20.2649-19.2996 5.79v101.8056l19.2996 5.7902 71.4093-17.3698-13.5101-2.8952-57.8992 10.1861V95.1392Z"/>
+  </g>
 </svg>

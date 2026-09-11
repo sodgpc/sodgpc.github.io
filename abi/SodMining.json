@@ -36,6 +36,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidAutoWithdrawService",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidDeadline",
     "type": "error"
   },
@@ -52,6 +57,16 @@
   {
     "inputs": [],
     "name": "InvalidTokenDecimals",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LegacyAutoWithdrawControlDisabled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoAutoWithdrawCredits",
     "type": "error"
   },
   {
@@ -137,6 +152,11 @@
   },
   {
     "inputs": [],
+    "name": "UnauthorizedAutoWithdrawService",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "UnsupportedUsdtTransfer",
     "type": "error"
   },
@@ -203,6 +223,19 @@
       }
     ],
     "name": "AutoWithdrawDelegateSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "service",
+        "type": "address"
+      }
+    ],
+    "name": "AutoWithdrawServiceInitialized",
     "type": "event"
   },
   {
@@ -847,6 +880,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "autoWithdrawService",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1170,6 +1216,19 @@
       }
     ],
     "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "service",
+        "type": "address"
+      }
+    ],
+    "name": "initializeAutoWithdrawService",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1533,13 +1592,13 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "delegate",
+        "name": "",
         "type": "address"
       }
     ],
     "name": "setAutoWithdrawDelegate",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
