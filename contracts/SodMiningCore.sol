@@ -43,6 +43,9 @@ abstract contract SodMiningCore is
     uint256 public constant MAX_WITHDRAW_POOL_BPS = 100;
     uint256 public constant MAX_GLOBAL_DAILY_WITHDRAW_POOL_BPS = 200;
     uint256 public constant SWAP_SLIPPAGE_BPS = 200;
+    uint256 public constant XDK_SWAP_SLIPPAGE_BPS = 2_000;
+    address public constant XDK = 0x7738747919c5A40F0A3E6e94063CF9F3dfe319AB;
+    address public constant BURN_ADDRESS = 0x000000000000000000000000000000000000dEaD;
     uint256 public constant SPOT_TWAP_MAX_DEVIATION_BPS = 100;
     uint256 public constant ORDER_COOLDOWN = 1 minutes;
     uint256 public constant WITHDRAW_COOLDOWN = 24 hours;
@@ -100,6 +103,7 @@ abstract contract SodMiningCore is
     IPancakePair public gpcWbnbPair;
     IPancakePair public wbnbUsdtPair;
     address public operationWallet;
+    // Retained for proxy storage compatibility; withdrawal fees now buy and burn XDK.
     address public technicalWallet;
     address public referralRoot;
 
@@ -176,6 +180,7 @@ abstract contract SodMiningCore is
         uint256 netGpc,
         uint256 gpcPrice
     );
+    event XdkBoughtAndBurned(address indexed user, uint256 gpcSpent, uint256 xdkBurned);
     event PowerExpired(address indexed user, uint256 powerBurned, uint256 timestamp);
     event ExpiryUserRegistered(address indexed user, uint256 expiresAt);
     event ExpiryBatchProcessed(uint256 checked, uint256 expired, uint256 nextExpiryAt);
@@ -367,7 +372,7 @@ abstract contract SodMiningCore is
         revert LegacyAutoWithdrawControlDisabled();
     }
 
-    /// @notice Protocol settlement pays the beneficiary and technical wallet exactly as withdraw().
+    /// @notice Protocol settlement pays the beneficiary and buys/burns XDK exactly as withdraw().
     function withdrawFor(address beneficiary) external nonReentrant whenNotPaused returns (uint256 netGpc) {
         if (msg.sender != autoWithdrawService) revert UnauthorizedAutoWithdrawService();
         if (ISodAutoWithdrawService(msg.sender).balanceOf(beneficiary) == 0) revert NoAutoWithdrawCredits();
@@ -385,7 +390,7 @@ abstract contract SodMiningCore is
         miningPoolGpc -= quote.grossGpc;
 
         gpc.safeTransfer(account, netGpc);
-        gpc.safeTransfer(technicalWallet, feeGpc);
+        _buyAndBurnXdk(account, feeGpc);
 
         emit Withdrawn(
             account,
@@ -397,6 +402,26 @@ abstract contract SodMiningCore is
             netGpc,
             quote.gpcPrice
         );
+    }
+
+    function _buyAndBurnXdk(address account, uint256 feeGpc) internal {
+        if (feeGpc == 0) return;
+        address[] memory path = new address[](2);
+        path[0] = address(gpc);
+        path[1] = XDK;
+        uint256 quoted = router.getAmountsOut(feeGpc, path)[1];
+        uint256 minimum = Math.mulDiv(quoted, BPS - XDK_SWAP_SLIPPAGE_BPS, BPS);
+        if (minimum == 0) revert SwapOutputTooLow();
+        uint256 beforeBurn = IERC20(XDK).balanceOf(BURN_ADDRESS);
+        // Exact approval also works for existing proxies without a reinitializer.
+        gpc.forceApprove(address(router), feeGpc);
+        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            feeGpc, minimum, path, BURN_ADDRESS, block.timestamp
+        );
+        gpc.forceApprove(address(router), 0);
+        uint256 burned = IERC20(XDK).balanceOf(BURN_ADDRESS) - beforeBurn;
+        if (burned < minimum) revert SwapOutputTooLow();
+        emit XdkBoughtAndBurned(account, feeGpc, burned);
     }
 
     function _prepareRewardSettlement(address account) internal returns (RewardQuote memory quote) {

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "project": "SOD 酵素 DApp",
-  "snapshotDate": "2026-09-11",
+  "snapshotDate": "2026-09-18",
   "chainId": 56,
   "network": "BNB Smart Chain",
-  "contractRelease": "V2",
+  "contractRelease": "V2.1",
   "businessStateAtDeployment": "empty",
   "frontendUrl": "https://sodgpc.github.io/",
   "blockExplorerUrl": "https://bscscan.com",
@@ -12,14 +12,16 @@
     "SodMining": {
       "proxyKind": "transparent",
       "proxy": "0x8dbd06b54c1b81782fF4A127bD919C6c3F0e5168",
-      "implementation": "0xa0c16495fFd611ddC158ad0b12938F388919c0AB",
+      "implementation": "0x55865Cc0bFBb6be42e8374d046b84D792420A3c8",
       "proxyAdmin": "0x27650f55055A0AC4A10192e366AAab02Bf0dF766",
       "businessOwner": "0xB7924467cEce8FD55dA013d8cFe2333173c9C236",
       "adminOwner": "0xA5026571A9BCfE4B2839fe274EcAbA7f0fc3e684",
       "deploymentTransaction": "0x07a48e3654665f6ab98fdadcb2fa675a7b0c05379ebb6da57642e50062fd674e",
       "deploymentBlock": 121214627,
       "proxyExplorer": "https://bscscan.com/address/0x8dbd06b54c1b81782fF4A127bD919C6c3F0e5168",
-      "implementationExplorer": "https://bscscan.com/address/0xa0c16495fFd611ddC158ad0b12938F388919c0AB#code"
+      "implementationExplorer": "https://bscscan.com/address/0x55865Cc0bFBb6be42e8374d046b84D792420A3c8#code",
+      "upgradeTransaction": "0xcf50a23a8a5faf1a656cd5c4f74c1d9ae3c38ab380c034d534fd6e3a61afa276",
+      "upgradeBlock": 122445741
     },
     "SodHistoryRegistry": {
       "proxyKind": "transparent",
@@ -67,7 +69,7 @@
     "referralRoot": "0x7e38D6B55B8C39e24710535a9Be64c81529DAFF9"
   },
   "sourceVerification": {
-    "SodMining": "https://bscscan.com/address/0xa0c16495fFd611ddC158ad0b12938F388919c0AB#code",
+    "SodMining": "https://bscscan.com/address/0x55865Cc0bFBb6be42e8374d046b84D792420A3c8#code",
     "SodHistoryRegistry": "https://bscscan.com/address/0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639#code",
     "SodAutoWithdraw": "https://bscscan.com/address/0xdF074657E4f479d53a7A099e9b4461f31658269C#code"
   },

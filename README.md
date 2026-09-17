@@ -38,7 +38,7 @@ AutoWithdraw的ProxyAdmin由B792单签控制。Mining虽然固定信任AutoWithd
 
 产品名为「青之梅·SOD酵素」，规格为“12盒10支装”。每份支付700 USDT并增加1,000个人算力。订单资金分为运营265 USDT、直推35 USDT及400 USDT兑换GPC，兑换所得全部进入Mining订单矿池。推荐人有效个人算力不足35时，35 USDT转运营；达到门槛则发放35 USDT并消耗35算力。
 
-静态收益按有效个人算力的0.35%计算；社区收益按截断到个人算力10倍的有效小区计算，权重10%，总毛收益最多为静态的2倍。领取按毛收益USDT值消耗个人算力，并按Oracle价格换算GPC；毛GPC的5%转技术钱包、95%发送用户。每24小时最多手动领取一次，购买会重置领取冷却。
+静态收益按有效个人算力的0.35%计算；社区收益按截断到个人算力10倍的有效小区计算，权重10%，总毛收益最多为静态的2倍。领取按毛收益USDT值消耗个人算力，并按Oracle价格换算GPC，以实际到账为准。每24小时最多手动领取一次，购买会重置领取冷却。
 
 钱包进入页面后核对推荐关系。明确未绑定时必须由用户填写或确认有效上级，并在钱包中签名；邀请链接中的 `ref` 或 `invite` 只用于预填，不会自动签名或绑定。钱包连接、绑定上级、USDT授权和购买支付是相互独立的确认。
 
@@ -73,8 +73,10 @@ npm run compile
 
 ## 链上源码入口
 
-- [Mining V2实现：0xa0c16495fFd611ddC158ad0b12938F388919c0AB](https://bscscan.com/address/0xa0c16495fFd611ddC158ad0b12938F388919c0AB#code)
+- [Mining V2实现：0x55865Cc0bFBb6be42e8374d046b84D792420A3c8](https://bscscan.com/address/0x55865Cc0bFBb6be42e8374d046b84D792420A3c8#code)
 - [AutoWithdraw V2实现：0xdF074657E4f479d53a7A099e9b4461f31658269C](https://bscscan.com/address/0xdF074657E4f479d53a7A099e9b4461f31658269C#code)
 - [History实现：0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639](https://bscscan.com/address/0xf51A4B17696c96C0A122AA6CAc0aCA8219a6E639#code)
 
 地址快照日期：2026-09-11。代理可由各自ProxyAdmin治理方升级，当前实现、绑定及权限最终以BSC链上状态为准。部署记录合并、链上验证、前端与执行器地址切换及线上发布产物哈希核验均已完成。
+
+2026-09-18：Mining实现已原地升级，代理地址保持不变。升级交易：[0xcf50a23a8a5faf1a656cd5c4f74c1d9ae3c38ab380c034d534fd6e3a61afa276](https://bscscan.com/tx/0xcf50a23a8a5faf1a656cd5c4f74c1d9ae3c38ab380c034d534fd6e3a61afa276)。
